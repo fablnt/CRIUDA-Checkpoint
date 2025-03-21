@@ -22,3 +22,8 @@ trap checkpoint SIGINT
 
 wait $PID
 
+
+# sudo singularity shell --add-caps CAP_CHECKPOINT_RESTORE criud.sif
+# criu restore --shell-job --images-dir checkpoint
+
+# snakemake nextflow
