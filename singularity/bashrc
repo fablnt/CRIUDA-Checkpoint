@@ -1,0 +1,11 @@
+start() {
+    ./start.sh "$@" "$@" "$@"
+}
+
+stop() {
+    ./stop.sh "$@"
+}
+
+resume() {
+    ./resume.sh "$@"
+}
