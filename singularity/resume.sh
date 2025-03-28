@@ -14,3 +14,13 @@ echo OK
         ./stop.sh test.py 
     fi
 ) &
+
+(
+    if [[ "$2" == "-periodic" ]]; then
+        sleep $3
+        while kill -0 $PID 2>/dev/null; do    
+            ./stop.sh test.py -no-stop
+            sleep $3
+        done 
+    fi
+) &
