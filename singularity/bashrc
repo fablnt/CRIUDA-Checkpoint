@@ -1,11 +1,11 @@
 start() {
-    ./start.sh "$@" "$@" "$@"
+    ./checkpoint.sh start "$@"
 }
 
 stop() {
-    ./stop.sh "$@"
+    ./checkpoint.sh stop "$@"
 }
 
 resume() {
-    ./resume.sh "$@"
+    ./checkpoint.sh resume "$@"
 }
