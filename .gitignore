@@ -1,4 +1,6 @@
-checkpoint/
-
+checkpoints/
+checkpoint_*/
+outputs/
+criud_sandbox/
 *.sif
 

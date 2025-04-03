@@ -1,13 +1,56 @@
 #!/bin/bash
 
+stop=""
+PYTHON_SCRIPT=""
+python_args=""
+sleeptime=""
+id="placeholder"
+nid=""
+has_id="n"
+
+CRIU_EX=""
+for ((i=1; i<=$#; i++)); do
+    if [ "${!i}" == "-id" ]; then
+        next_index=$((i + 1))
+        id="${!next_index}"
+        nid="${!next_index}"
+        has_id="y"
+    fi
+
+    if [ "${!i}" == "-time" ]; then
+        next_index=$((i + 1))
+        sleeptime="${!next_index}"
+        stop="-time"
+    fi
+
+    if [ "${!i}" == "-periodic" ]; then
+        next_index=$((i + 1))
+        sleeptime="${!next_index}"
+        stop="-periodic"
+    fi
+    if [[ "${!i}" == *.py ]]; then
+        PYTHON_SCRIPT="${!i}"
+        for ((j=i+1; j<=$#; j++)); do
+            python_args="${python_args} ${!j}"
+        done
+    fi
+done
+
 TYPE="$1"
-PYTHON_SCRIPT="$2"
-CHECKPOINT_DIR="checkpoint_${PYTHON_SCRIPT%.py}" 
-PID_FILE="Pid_${PYTHON_SCRIPT%.py}"
+if [ "$id" == "placeholder" ]; then
+    id=${PYTHON_SCRIPT%.py}
+else
+    id="${PYTHON_SCRIPT%.py}_$id"
+fi
+
+mkdir -p checkpoints
+mkdir -p outputs
+CHECKPOINT_DIR="checkpoints/checkpoint_$id" 
+PID_FILE="outputs/Pid_$id"
 
 
 if [[ "$TYPE" == "start" ]]; then
-    setsid python3 -u "$PYTHON_SCRIPT" < /dev/null &> "output.log" &
+    setsid python3 -u "$PYTHON_SCRIPT" $python_args < /dev/null &> "outputs/output_$id.log" &
     PID=$!
     echo "$PID" > $PID_FILE
     echo "Process started with pid: $PID"
@@ -15,24 +58,33 @@ fi
 
 if [[ "$TYPE" == "resume" ]]; then
     PID=$(<$PID_FILE)
-    criu restore -d -v4 -o restore.log --images-dir $CHECKPOINT_DIR & 
+    ${CRIU_EX}criu restore -d -v4 -o restore.log --images-dir $CHECKPOINT_DIR & 
     echo "Process $PID resumed"
 fi
 
 if [[ "$TYPE" == "resume" || "$TYPE" == "start" ]]; then
     (
-        if [[ "$3" == "-time" ]]; then
-            sleep $4 
-            ./checkpoint.sh stop test.py 
-        fi
+        if [[ "$stop" == "-time" ]]; then
+            sleep $sleeptime 
+            if [ "$has_id" == "y" ]; then
+                ./checkpoint.sh stop -id $nid "$PYTHON_SCRIPT"
+            else
+                ./checkpoint.sh stop "$PYTHON_SCRIPT"
+            fi
+             
+        fi 
     ) &
 
     (
-        if [[ "$3" == "-periodic" ]]; then
-            sleep $4
+        if [[ "$stop" == "-periodic" ]]; then
+            sleep $sleeptime
             while kill -0 $PID 2>/dev/null; do    
-                ./checkpoint.sh stop test.py -no-stop
-                sleep $4
+                if [ "$has_id" == "y" ]; then
+                    ./checkpoint.sh stop -id $nid "$PYTHON_SCRIPT"
+                else
+                    ./checkpoint.sh stop "$PYTHON_SCRIPT"
+                fi
+                sleep $sleeptime
             done 
         fi
     ) &
@@ -49,7 +101,7 @@ if [[ "$TYPE" == "stop" ]]; then
     mkdir -p "$CHECKPOINT_DIR"    
 
     START=$(date +%s%N)
-    criu dump -t $PID -v4 -o dump.log --images-dir $CHECKPOINT_DIR $LEAVE_RUNNING
+    ${CRIU_EX}criu dump -t $PID -v4 -o dump.log --images-dir $CHECKPOINT_DIR $LEAVE_RUNNING
     END=$(date +%s%N)
     DIFF=$(( (END - START) / 1000000 ))
     printf "Checkpoint saved in $CHECKPOINT_DIR in $DIFF ms\n"

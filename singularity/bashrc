@@ -1,11 +1,13 @@
+DIR=/home/andrea/checkpoint
+
 start() {
-    ./checkpoint.sh start "$@"
+    "$DIR"/ML-Restart/singularity/checkpoint.sh start "$@"
 }
 
 stop() {
-    ./checkpoint.sh stop "$@"
+    "$DIR"/ML-Restart/singularity/checkpoint.sh stop "$@"
 }
 
 resume() {
-    ./checkpoint.sh resume "$@"
+    "$DIR"/ML-Restart/singularity/checkpoint.sh resume "$@"
 }
