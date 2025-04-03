@@ -67,9 +67,9 @@ if [[ "$TYPE" == "resume" || "$TYPE" == "start" ]]; then
         if [[ "$stop" == "-time" ]]; then
             sleep $sleeptime 
             if [ "$has_id" == "y" ]; then
-                "$DIR"/ML-Restart/singularity/checkpoint.sh stop -id $nid "$PYTHON_SCRIPT"
+                "$DIR"/ML-Restart/checkpoint.sh stop -id $nid "$PYTHON_SCRIPT"
             else
-                "$DIR"/ML-Restart/singularity/checkpoint.sh stop "$PYTHON_SCRIPT"
+                "$DIR"/ML-Restart/checkpoint.sh stop "$PYTHON_SCRIPT"
             fi
              
         fi 
@@ -80,9 +80,9 @@ if [[ "$TYPE" == "resume" || "$TYPE" == "start" ]]; then
             sleep $sleeptime
             while kill -0 $PID 2>/dev/null; do    
                 if [ "$has_id" == "y" ]; then
-                    "$DIR"/ML-Restart/singularity/checkpoint.sh stop -id $nid "$PYTHON_SCRIPT"
+                    "$DIR"/ML-Restart/checkpoint.sh stop -id $nid "$PYTHON_SCRIPT"
                 else
-                    "$DIR"/ML-Restart/singularity/checkpoint.sh stop "$PYTHON_SCRIPT"
+                    "$DIR"/ML-Restart/checkpoint.sh stop "$PYTHON_SCRIPT"
                 fi
                 sleep $sleeptime
             done 

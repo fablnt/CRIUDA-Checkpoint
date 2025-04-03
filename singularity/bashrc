@@ -1,4 +1,4 @@
-DIR=/home/andrea/checkpoint
+export DIR=/home/andrea/checkpoint
 
 start() {
     "$DIR"/ML-Restart/singularity/checkpoint.sh start "$@"
