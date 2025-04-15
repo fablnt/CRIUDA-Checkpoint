@@ -6,6 +6,9 @@ A fully transparent and efficient checkpointing solution is offered by the check
 
 The `checkpoint.sh` script is provided in this repository to handle the execution of checkpoint and restore operations with CRIU in a simplified manner.
 
+> [!IMPORTANT]
+> To download some of the libraries required for installing CRIU and to effectively use the tool, root privileges are required.
+
 ## How to install
 Follow the steps below to install and use CRIU:
 
