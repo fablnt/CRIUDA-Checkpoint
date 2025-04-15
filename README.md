@@ -4,7 +4,16 @@ The checkpoint mechanism can be implemented at different levels of the software 
 
 A fully transparent and efficient checkpointing solution is offered by the checkpoint/restore tool CRIU (Checkpoint/Restore In Userspace) starting from version 4.0. In particular, CRIU combines GPU and CPU state in a single unified snapshot, eliminating performance overheads typical of state-of-the-art transparent checkpointing mechanism.
 
-## how to install
-parlare del DIR in bashrc and CRIU_EX in script
+The `checkpoint.sh` script is provided in this repository to handle the execution of checkpoint and restore operations with CRIU in a simplified manner.
+
+## How to install
+Follow the steps below to install and use CRIU:
+
+1. Install CRIU from [CRIU Installation](https://criu.org/Installation)
+2. Clone this repository
+3. Modify variable [CRIU_EX](https://github.com/fablnt/CRIUDA-Checkpoint/blob/master/checkpoint.sh#L11C1-L11C11) in checkpoint.sh inserting the path to the criu executable located in the /criu/criu/ directory (e.g. CRIU_EX="/home/mpcheckpoint/criu/criu/").
+4. Modify variable [DIR](https://github.com/fablnt/CRIUDA-Checkpoint/blob/master/bashrc#L1) in the bashrc file inserting the path to the CRIU directory (e.g. DIR=/home/mpcheckpoint).
+5. TODO cuda plugin.
 
 ## Usage
+
