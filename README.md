@@ -9,8 +9,6 @@ A fully transparent and efficient checkpointing solution is offered by the check
   <p><em>Figure 1: CRIUDA checkpointing system. Adapted from <a href="https://arxiv.org/abs/2502.16631">Stoyanov et al., 2024</a>.</em></p>
 </div>
 
-The `checkpoint.sh` script is provided in this repository to handle the execution of checkpoint and restore operations with CRIU in a simplified manner.
-
 > [!IMPORTANT]
 > To download some of the libraries required for installing CRIU and to effectively use the tool, root privileges are required.
 
@@ -19,9 +17,42 @@ Follow the steps below to install and use CRIU:
 
 1. Install CRIU from [CRIU Installation](https://criu.org/Installation)
 2. Clone this repository
-3. Modify variable [CRIU_EX](https://github.com/fablnt/CRIUDA-Checkpoint/blob/master/checkpoint.sh#L11C1-L11C11) in checkpoint.sh inserting the path to the criu executable located in the /criu/criu/ directory (e.g. CRIU_EX="/home/mpcheckpoint/criu/criu/").
-4. Modify variable [DIR](https://github.com/fablnt/CRIUDA-Checkpoint/blob/master/bashrc#L1) in the bashrc file inserting the path to the CRIU directory (e.g. DIR=/home/mpcheckpoint).
+3. Modify variable [CRIU_EX](https://github.com/fablnt/CRIUDA-Checkpoint/blob/master/checkpoint.sh#L11C1-L11C11) in ```checkpoint.sh``` inserting the path to the criu executable located in the /criu/criu/ directory (e.g. CRIU_EX="/home/mpcheckpoint/criu/criu/").
+4. Modify variable [DIR](https://github.com/fablnt/CRIUDA-Checkpoint/blob/master/bashrc#L1) in the ```bashrc``` and in the ```checkpoint.sh``` file inserting the path to the CRIU directory (e.g. DIR=/home/mpcheckpoint).
 5. TODO cuda plugin.
 
 ## Usage
+The `checkpoint.sh` script handles the execution of checkpoint and restore operations with CRIU in a simplified manner. Before executing any of the above command, source the `bashrc` file with
+
+```
+source bashrc
+```
+
+### Starting a program
+To run a program
+
+```
+start <additional arguments> file_name.py <python arguments>
+```
+where the additional arguments can be:
+- ```-id``` :
+- ```-time```:
+- ```-periodic```:
+
+### Checkpointing a program
+To checkpoint a program 
+
+```
+stop -id <id> file_name.py 
+```
+```-id``` must be included if previously specified in the start command.
+
+### Resuming a program
+To resume a checkpointed program
+
+```
+resume -id <id> file_name.py 
+```
+```-id``` must be included if previously specified in the start command. Additionally, the ```-periodic``` and the ```-time``` can be used equivalently as in the start command.
+
 
