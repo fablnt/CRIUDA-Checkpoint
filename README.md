@@ -22,7 +22,7 @@ Follow the steps below to install and use CRIU:
 5. TODO cuda plugin.
 
 ## Usage
-The `checkpoint.sh` script handles the execution of checkpoint and restore operations with CRIU in a simplified manner. Before executing any of the above command, source the `bashrc` file with
+The `checkpoint.sh` script handles the execution of checkpoint and restore operations with CRIU in a simplified manner. Before executing any of the below commands, source the `bashrc` file with
 
 ```
 source bashrc
@@ -35,9 +35,15 @@ To run a program
 start <additional arguments> file_name.py <python arguments>
 ```
 where the additional arguments can be:
-- ```-id``` :
-- ```-time```:
-- ```-periodic```:
+- ```-id``` : tag to identify different process executing the same python file.
+- ```-time```: specify time in seconds after which the program will stop and checkpoint its state.
+- ```-periodic```: specify time in seconds after which the program will checkpoint its state peridiocally, continuing its execution.
+
+If not present, the output directory will be created, containing for each process an output_fileName_id.log file that logs the output stream.
+
+If not present, the checkpoints directory will be created, containing for each process a checkpoint_fileName_id directory containing the checkpoint snapshots.
+
+
 
 ### Checkpointing a program
 To checkpoint a program 
@@ -46,6 +52,7 @@ To checkpoint a program
 stop -id <id> file_name.py 
 ```
 ```-id``` must be included if previously specified in the start command.
+
 
 ### Resuming a program
 To resume a checkpointed program
@@ -56,3 +63,5 @@ resume -id <id> file_name.py
 ```-id``` must be included if previously specified in the start command. Additionally, the ```-periodic``` and the ```-time``` can be used equivalently as in the start command.
 
 
+> [!NOTE]
+> Be sure to be in the same directory where the checkpoint and output diretories are when resuming a program.
