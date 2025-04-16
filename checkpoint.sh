@@ -8,7 +8,9 @@ id="placeholder"
 nid=""
 has_id="n"
 
-CRIU_EX=""
+DIR="/home/mpcheckpoint"
+CRIU_EX="/home/mpcheckpoint/criu/criu/"
+echo "$DIR"
 for ((i=1; i<=$#; i++)); do
     if [ "${!i}" == "-id" ]; then
         next_index=$((i + 1))
@@ -45,7 +47,7 @@ fi
 
 mkdir -p checkpoints
 mkdir -p outputs
-CHECKPOINT_DIR="checkpoints/checkpoint_$id" 
+CHECKPOINT_DIR="checkpoints/checkpoint_$id"
 PID_FILE="outputs/Pid_$id"
 
 
@@ -58,34 +60,34 @@ fi
 
 if [[ "$TYPE" == "resume" ]]; then
     PID=$(<$PID_FILE)
-    ${CRIU_EX}criu restore -d -v4 -o restore.log --images-dir $CHECKPOINT_DIR & 
+    ${CRIU_EX}criu restore -d -v4 -o restore.log --images-dir $CHECKPOINT_DIR &
     echo "Process $PID resumed"
 fi
 
 if [[ "$TYPE" == "resume" || "$TYPE" == "start" ]]; then
     (
         if [[ "$stop" == "-time" ]]; then
-            sleep $sleeptime 
+            sleep $sleeptime
             if [ "$has_id" == "y" ]; then
-                "$DIR"/ML-Restart/checkpoint.sh stop -id $nid "$PYTHON_SCRIPT"
+                sudo "$DIR"/CRIUDA-Checkpoint/checkpoint.sh stop -id $nid "$PYTHON_SCRIPT"
             else
-                "$DIR"/ML-Restart/checkpoint.sh stop "$PYTHON_SCRIPT"
+                sudo "$DIR"/CRIUDA-Checkpoint/checkpoint.sh stop "$PYTHON_SCRIPT"
             fi
-             
-        fi 
+
+        fi
     ) &
 
     (
         if [[ "$stop" == "-periodic" ]]; then
             sleep $sleeptime
-            while kill -0 $PID 2>/dev/null; do    
+            while kill -0 $PID 2>/dev/null; do
                 if [ "$has_id" == "y" ]; then
-                    "$DIR"/ML-Restart/checkpoint.sh stop -id $nid "$PYTHON_SCRIPT"
+                    sudo "$DIR"/CRIUDA-Checkpoint/checkpoint.sh stop -id $nid "$PYTHON_SCRIPT" -no-stop
                 else
-                    "$DIR"/ML-Restart/checkpoint.sh stop "$PYTHON_SCRIPT"
+                    sudo "$DIR"/CRIUDA-Checkpoint/checkpoint.sh stop "$PYTHON_SCRIPT" -no-stop
                 fi
                 sleep $sleeptime
-            done 
+            done
         fi
     ) &
 fi
@@ -98,7 +100,7 @@ if [[ "$TYPE" == "stop" ]]; then
     fi
 
     echo -e "\nCheckpointing process $PID"
-    mkdir -p "$CHECKPOINT_DIR"    
+    mkdir -p "$CHECKPOINT_DIR"
 
     START=$(date +%s%N)
     ${CRIU_EX}criu dump -t $PID -v4 -o dump.log --images-dir $CHECKPOINT_DIR $LEAVE_RUNNING
@@ -108,4 +110,3 @@ if [[ "$TYPE" == "stop" ]]; then
 fi
 
 # sudo singularity shell --add-caps CAP_CHECKPOINT_RESTORE criud.sif
-# snakemake nextflow    
