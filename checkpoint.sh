@@ -10,7 +10,6 @@ has_id="n"
 
 DIR="/home/mpcheckpoint"
 CRIU_EX="/home/mpcheckpoint/criu/criu/"
-echo "$DIR"
 for ((i=1; i<=$#; i++)); do
     if [ "${!i}" == "-id" ]; then
         next_index=$((i + 1))
