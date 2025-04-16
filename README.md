@@ -32,7 +32,7 @@ source bashrc
 To run a program
 
 ```
-start <additional arguments> file_name.py <python arguments>
+start <additional arguments> fileName.py <python arguments>
 ```
 where the additional arguments can be:
 - ```-id``` : tag to identify different process executing the same python file.
@@ -49,7 +49,7 @@ If not present, the checkpoints directory will be created, containing for each p
 To checkpoint a program 
 
 ```
-stop -id <id> file_name.py 
+stop -id <id> fileName.py 
 ```
 ```-id``` must be included if previously specified in the start command.
 
@@ -58,9 +58,9 @@ stop -id <id> file_name.py
 To resume a checkpointed program
 
 ```
-resume -id <id> file_name.py 
+resume -id <id> fileName.py 
 ```
-```-id``` must be included if previously specified in the start command. Additionally, the ```-periodic``` and the ```-time``` can be used equivalently as in the start command.
+```-id``` must be included if previously specified in the start command. Additionally, the ```-periodic``` and the ```-time``` flags can be used equivalently as in the start command.
 
 
 > [!NOTE]
