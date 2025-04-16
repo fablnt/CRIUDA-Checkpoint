@@ -1,13 +1,13 @@
-export DIR=/home/andrea/checkpoint
+export DIR=/home/mpcheckpoint
 
 start() {
-    "$DIR"/ML-Restart/checkpoint.sh start "$@"
+    sudo "$DIR"/CRIUDA-Checkpoint/checkpoint.sh start "$@"
 }
 
 stop() {
-    "$DIR"/ML-Restart/checkpoint.sh stop "$@"
+    sudo "$DIR"/CRIUDA-Checkpoint/checkpoint.sh stop "$@"
 }
 
 resume() {
-    "$DIR"/ML-Restart/checkpoint.sh resume "$@"
+    sudo "$DIR"/CRIUDA-Checkpoint/checkpoint.sh resume "$@"
 }
